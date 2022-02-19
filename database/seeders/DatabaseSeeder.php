@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\{Position, Status};
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,6 +14,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        if (!Status::count()) {
+            $this->call(StatusSeeder::class);
+        }
+
+        if (!Position::count()) {
+            $this->call(PositionSeeder::class);
+        }
     }
 }
