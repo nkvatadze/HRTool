@@ -12,4 +12,21 @@ trait BelongsToManySkills
     {
         return $this->belongsToMany(Skill::class, relation: CandidateSkill::class);
     }
+
+    public function addSkills(array $skills): void
+    {
+        $this->skills()->attach($skills);
+    }
+
+    public function syncSkills(array $skills): void
+    {
+        $this->skills()->sync($skills);
+    }
+
+    public function getSkillIdsAttribute(): array
+    {
+        if (!$this->relationLoaded('skills')) return [];
+
+        return $this->skills->pluck('id')->all();
+    }
 }

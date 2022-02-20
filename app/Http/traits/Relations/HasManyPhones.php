@@ -11,4 +11,18 @@ trait HasManyPhones
     {
         return $this->morphMany(Phone::class, 'phoneable');
     }
+
+    public function addPhones(array $phones): void
+    {
+        $this->phones()->createMany(
+            array_map(fn($number) => ['number' => $number], $phones)
+        );
+    }
+
+    public function getPhoneNumbersAttribute(): array
+    {
+        if (!$this->relationLoaded('phones')) return [];
+
+        return $this->phones->pluck('number')->all();
+    }
 }

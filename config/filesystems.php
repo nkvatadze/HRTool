@@ -70,4 +70,5 @@ return [
         public_path('storage') => storage_path('app/public'),
     ],
 
+    'cv_path' => 'uploads/cvs'
 ];

@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->foreignIdFor(Position::class)->constrained()->restrictOnDelete();
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->integer('years_of_experience')->nullable();
             $table->integer('min_salary')->nullable();
             $table->integer('max_salary')->nullable();

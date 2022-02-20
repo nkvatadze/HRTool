@@ -4,12 +4,16 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Candidate\IndexRequest;
+use App\Http\Requests\Candidate\StoreRequest;
 use App\Http\Resources\CandidateResource;
+use App\Http\traits\FileUpload;
 use App\Models\Candidate;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CandidateController extends Controller
 {
+    use FileUpload;
+
     public function index(IndexRequest $request): JsonResource
     {
         $validated = $request->validated();
@@ -22,9 +26,17 @@ class CandidateController extends Controller
         return CandidateResource::collection($candidates);
     }
 
-    public function store()
+    public function store(StoreRequest $request)
     {
+        $validated = $request->validated();
 
+        $validated['cv_path'] = $this->uploadFile($validated['cv'] ?? null, config('filesystems.cv_path'));
+
+        $candidate = Candidate::create($validated);
+
+        $candidate->addSkills($validated['skills'] ?? []);
+
+        $candidate->addPhones($validated['phones'] ?? []);
     }
 
     public function destroy()
