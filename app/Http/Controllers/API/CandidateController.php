@@ -8,7 +8,9 @@ use App\Http\Requests\Candidate\StoreRequest;
 use App\Http\Resources\CandidateResource;
 use App\Http\traits\FileUpload;
 use App\Models\Candidate;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Response;
 
 class CandidateController extends Controller
 {
@@ -26,7 +28,7 @@ class CandidateController extends Controller
         return CandidateResource::collection($candidates);
     }
 
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request): JsonResponse
     {
         $validated = $request->validated();
 
@@ -37,6 +39,8 @@ class CandidateController extends Controller
         $candidate->addSkills($validated['skills'] ?? []);
 
         $candidate->addPhones($validated['phones'] ?? []);
+
+        return response()->success(code: Response::HTTP_CREATED);
     }
 
     public function destroy()

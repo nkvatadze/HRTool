@@ -15,8 +15,10 @@ class StorageFilePath implements CastsAttributes
      * @param  array  $attributes
      * @return mixed
      */
-    public function get($model, string $key, $value, array $attributes): string
+    public function get($model, string $key, $value, array $attributes): ?string
     {
+        if(!$value) return null;
+
         return asset("storage/$value");
     }
 
@@ -29,7 +31,7 @@ class StorageFilePath implements CastsAttributes
      * @param  array  $attributes
      * @return mixed
      */
-    public function set($model, string $key, $value, array $attributes): string
+    public function set($model, string $key, $value, array $attributes): ?string
     {
         return $value;
     }
