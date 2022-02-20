@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Casts\StorageFilePath;
 use App\Http\traits\ApiPagination;
 use App\Http\traits\Relations\{BelongsToPosition, BelongsToStatus, HasManyPhones, BelongsToManySkills};
-use Illuminate\Database\Eloquent\{Factories\HasFactory, Model};
+use Illuminate\Database\Eloquent\{Factories\HasFactory, Model, SoftDeletes};
 use Illuminate\Support\Facades\Cache;
 
 class Candidate extends Model
@@ -15,7 +15,8 @@ class Candidate extends Model
         BelongsToStatus,
         BelongsToPosition,
         HasManyPhones,
-        BelongsToManySkills;
+        BelongsToManySkills,
+        SoftDeletes;
 
     protected $fillable = [
         'status_id',
