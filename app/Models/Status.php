@@ -2,11 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\{Factories\HasFactory, Model};
-
-class Status extends Model
+class Status extends BasicRelationModel
 {
-    use HasFactory;
-
-    public $timestamps = false;
 }

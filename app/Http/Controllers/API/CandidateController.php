@@ -14,11 +14,12 @@ class CandidateController extends Controller
     {
         $validated = $request->validated();
 
-        $candidates = Candidate::latest('id')
+        $candidates = Candidate::with('phones', 'skills')
+            ->latest('id')
             ->apiPagination($validated['skip'])
             ->get();
 
-        return  CandidateResource::collection($candidates);
+        return CandidateResource::collection($candidates);
     }
 
     public function store()

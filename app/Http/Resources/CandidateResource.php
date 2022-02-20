@@ -20,6 +20,8 @@ class CandidateResource extends JsonResource
             'position_id'=>$this->position_id,
             'first_name'=>$this->first_name,
             'last_name'=>$this->last_name,
+            'skills'=>$this->skillIds,
+            'phones'=>$this->phoneNumbers,
             'email'=>$this->email,
             'years_of_experience'=>$this->years_of_experience,
             'min_salary'=>$this->min_salary,

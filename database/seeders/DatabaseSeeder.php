@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\{Position, Status};
+use App\Models\{Position, Skill, Status};
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,6 +20,10 @@ class DatabaseSeeder extends Seeder
 
         if (!Position::count()) {
             $this->call(PositionSeeder::class);
+        }
+
+        if (!Skill::count()) {
+            $this->call(SkillSeeder::class);
         }
     }
 }

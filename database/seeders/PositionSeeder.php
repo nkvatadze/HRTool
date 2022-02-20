@@ -17,18 +17,13 @@ class PositionSeeder extends Seeder
     {
         $positions = [
             'Laravel Developer',
+            'PHP developer',
             'Node.js Developer',
             'React.js Developer',
             'Vue.js developer',
             'Human Resources',
-            'Administrative Assistant',
-            'Executive Assistant',
-            'Marketing Manager',
-            'Customer Service Representative',
-            'Nurse Practitioner',
             'Software Engineer',
-            'Sales Manager',
-            'Data Entry Clerk',
+            'Python Developer',
         ];
 
         $insertData = [];
@@ -41,6 +36,6 @@ class PositionSeeder extends Seeder
 
         Position::insert($insertData);
 
-        Cache::forever('candidate-position', Position::all());
+        Cache::forever('positions', Position::all());
     }
 }

@@ -2,11 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\{Factories\HasFactory, Model};
-
-class Position extends Model
+class Position extends BasicRelationModel
 {
-    use HasFactory;
-
-    public $timestamps = false;
 }

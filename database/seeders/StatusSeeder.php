@@ -34,6 +34,6 @@ class StatusSeeder extends Seeder
 
         Status::insert($insertData);
 
-        Cache::forever('candidate-statuses', Status::all());
+        Cache::forever('statuses', Status::all());
     }
 }
