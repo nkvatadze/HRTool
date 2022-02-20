@@ -43,8 +43,10 @@ class CandidateController extends Controller
         return response()->success(code: Response::HTTP_CREATED);
     }
 
-    public function destroy()
+    public function destroy(Candidate $candidate): JsonResponse
     {
+        $candidate->delete();
 
+        return response()->success(code: Response::HTTP_NO_CONTENT);
     }
 }
