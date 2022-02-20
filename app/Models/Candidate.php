@@ -3,8 +3,14 @@
 namespace App\Models;
 
 use App\Casts\StorageFilePath;
-use App\Http\traits\ApiPagination;
-use App\Http\traits\Relations\{BelongsToPosition, BelongsToStatus, HasManyPhones, BelongsToManySkills};
+use App\Events\CandidateStatusUpdated;
+use App\Http\Traits\ApiPagination;
+use App\Http\Traits\Relations\{BelongsToManyStatuses,
+    BelongsToPosition,
+    BelongsToStatus,
+    HasManyPhones,
+    BelongsToManySkills
+};
 use Illuminate\Database\Eloquent\{Factories\HasFactory, Model, SoftDeletes};
 use Illuminate\Support\Facades\Cache;
 
@@ -16,6 +22,7 @@ class Candidate extends Model
         BelongsToPosition,
         HasManyPhones,
         BelongsToManySkills,
+        BelongsToManyStatuses,
         SoftDeletes;
 
     protected $fillable = [
@@ -34,18 +41,4 @@ class Candidate extends Model
     protected $casts = [
         'cv_path' => StorageFilePath::class
     ];
-
-    /**
-     * The "booted" method of the model.
-     *
-     * @return void
-     */
-    protected static function booted()
-    {
-        $initialStatus = Cache::rememberForever('statuses', fn() => Status::all())->where('name', 'Initial')->first()->id;
-
-        static::creating(function (Candidate $candidate) use ($initialStatus) {
-            $candidate->status_id = $initialStatus;
-        });
-    }
 }

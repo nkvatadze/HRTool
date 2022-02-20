@@ -46,10 +46,12 @@ class Handler extends ExceptionHandler
             if ($request->wantsJson()) {
 
                 if ($e instanceof NotFoundHttpException) {
-                    return response()->fail(code: Response::HTTP_NOT_FOUND);
+                    return response()->fail([
+                        'server' => 'Not Found'
+                    ], code: Response::HTTP_NOT_FOUND);
                 }
 
-                if($e instanceof ValidationException){
+                if ($e instanceof ValidationException) {
                     return response()->fail($e->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
             }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\traits;
+namespace App\Http\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 

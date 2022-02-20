@@ -20,5 +20,6 @@ Route::prefix('candidates')
     ->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('store');
+        Route::patch('{candidate}', 'update')->name('update');
         Route::delete('{candidate}', 'destroy')->name('destroy');
     });

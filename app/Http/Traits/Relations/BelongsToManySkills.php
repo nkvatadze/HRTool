@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\traits\Relations;
+namespace App\Http\Traits\Relations;
 
 use App\Models\CandidateSkill;
 use App\Models\Skill;
