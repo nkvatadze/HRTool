@@ -1,12 +1,19 @@
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import Routes from "../routes/Routes";
-
+import { CollectionProvider } from "../context/CollectionContext";
+import Header from "./Header";
 function App() {
     return (
-        <Router>
-            <Routes />
-        </Router>
+        <>
+            <CollectionProvider>
+                <Router>
+                    <Header />
+
+                    <Routes />
+                </Router>
+            </CollectionProvider>
+        </>
     );
 }
 
