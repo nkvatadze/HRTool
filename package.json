@@ -23,6 +23,8 @@
         "@emotion/styled": "^11.8.1",
         "@mui/icons-material": "^5.4.2",
         "@mui/material": "^5.4.3",
-        "react-router-dom": "^6.2.1"
+        "formik": "^2.2.9",
+        "react-router-dom": "^6.2.1",
+        "yup": "^0.32.11"
     }
 }
