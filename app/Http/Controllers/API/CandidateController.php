@@ -3,17 +3,14 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Candidate\IndexRequest;
-use App\Http\Requests\Candidate\StoreRequest;
-use App\Http\Requests\Candidate\UpdateRequest;
+use App\Http\Requests\{Candidate\IndexRequest, Candidate\StoreRequest, Candidate\UpdateRequest};
 use App\Http\Resources\CandidateResource;
 use App\Http\Traits\FileUpload;
 use App\Models\Candidate;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Exception;
+use Illuminate\Http\{JsonResponse, Resources\Json\JsonResource, Response};
+use Illuminate\Support\{Facades\DB, Facades\Log, Facades\Storage};
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CandidateController extends Controller
 {
@@ -35,7 +32,7 @@ class CandidateController extends Controller
     {
         $validated = $request->validated();
 
-        $validated['cv_path'] = $this->uploadFile($validated['cv'] ?? null, config('filesystems.cv_path'));
+        $validated['cv_path'] = $this->uploadFile($validated['cv'] ?? null, config('filesystems.cv_path'), 'local');
 
         $candidate = Candidate::create($validated);
 
@@ -54,7 +51,7 @@ class CandidateController extends Controller
         try {
             $candidate->update($validated);
             DB::commit();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
             return \response()->fail([
@@ -64,6 +61,12 @@ class CandidateController extends Controller
 
         return \response()->success(code: Response::HTTP_NO_CONTENT);
     }
+
+    public function downloadCV(Candidate $candidate): StreamedResponse
+    {
+        return Storage::download($candidate->cv_path);
+    }
+
 
     public function destroy(Candidate $candidate): JsonResponse
     {

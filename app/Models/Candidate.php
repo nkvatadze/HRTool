@@ -37,8 +37,4 @@ class Candidate extends Model
         'linkedin_url',
         'cv_path',
     ];
-
-    protected $casts = [
-        'cv_path' => StorageFilePath::class
-    ];
 }

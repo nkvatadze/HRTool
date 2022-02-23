@@ -1,15 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { Button, Chip, Container, Stack, Paper } from "@mui/material";
+import {
+    Button,
+    Chip,
+    Container,
+    Stack,
+    Paper,
+    IconButton,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+} from "@mui/material";
 import { fetchCandidates } from "../api/candidates";
 import { useCollection } from "../context/CollectionContext";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
+import { Link, useNavigate } from "react-router-dom";
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
-import { useNavigate } from "react-router-dom";
+import DownloadingIcon from "@mui/icons-material/Downloading";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
 
 const Candidates = () => {
     const navigate = useNavigate();
@@ -21,7 +30,6 @@ const Candidates = () => {
         const getCandidates = async () => {
             try {
                 const res = await fetchCandidates(skip);
-                console.log(res);
                 setCandidates(res.data);
             } catch (e) {}
         };
@@ -54,12 +62,14 @@ const Candidates = () => {
                                 <TableCell>Contact</TableCell>
                                 <TableCell>Skills</TableCell>
                                 <TableCell>Sallary Range</TableCell>
+                                <TableCell>CV</TableCell>
+                                <TableCell>Linked In</TableCell>
                                 <TableCell>Status</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {candidates.map((candidate) => (
-                                <TableRow key={candidate.id}>
+                                <TableRow hover key={candidate.id}>
                                     <TableCell>
                                         <strong>
                                             {candidate.first_name}{" "}
@@ -90,6 +100,7 @@ const Candidates = () => {
                                                 <Chip
                                                     key={skill}
                                                     style={{
+                                                        marginTop: "5px",
                                                         marginRight: "2px",
                                                     }}
                                                     color="secondary"
@@ -103,12 +114,36 @@ const Candidates = () => {
                                             ))}
                                     </TableCell>
                                     <TableCell>
-                                        {candidate.min_salary} -{" "}
+                                        {candidate.min_salary} -
                                         {candidate.max_salary}
+                                    </TableCell>
+                                    <TableCell align="left">
+                                        {candidate.has_cv && (
+                                            <IconButton
+                                                color="info"
+                                                size="large"
+                                                component={Link}
+                                                to={`/candidates/${candidate.id}/cv`}
+                                                target="_blank"
+                                                download
+                                            >
+                                                <DownloadingIcon />
+                                            </IconButton>
+                                        )}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <IconButton
+                                            color="info"
+                                            size="large"
+                                            href={candidate.linkedin_url}
+                                            target="_blank"
+                                        >
+                                            <LinkedInIcon />
+                                        </IconButton>
                                     </TableCell>
                                     <TableCell>
                                         <Chip
-                                            color="info"
+                                            color="primary"
                                             icon={<CompareArrowsIcon />}
                                             clickable
                                             onClick={() =>
