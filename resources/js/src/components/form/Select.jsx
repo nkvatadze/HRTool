@@ -8,7 +8,7 @@ import {
 import React from "react";
 
 const Select = ({
-    required,
+    disabled,
     value,
     label,
     name,
@@ -18,7 +18,7 @@ const Select = ({
     helperText,
 }) => {
     return (
-        <FormControl required={required} sx={{ m: 1 }} fullWidth>
+        <FormControl disabled={disabled || false} sx={{ m: 1 }} fullWidth>
             <InputLabel id={name}>{label}</InputLabel>
             <MuiSelect
                 labelId={name}
@@ -30,7 +30,7 @@ const Select = ({
                 error={error}
             >
                 <MenuItem value="">
-                    <em>Select position</em>
+                    <em>Select {label}</em>
                 </MenuItem>
                 {options.map((option) => (
                     <MenuItem key={option.id} value={option.id}>

@@ -8,3 +8,7 @@ export const fetchCandidates = (skip = 0) =>
     });
 
 export const storeCandidate = (data) => client.post("/candidates", data);
+
+export const destroyCandidate = (id) => client.delete(`/candidates/${id}`);
+
+export const showCandidate = (id) => client.get(`/candidates/${id}`);

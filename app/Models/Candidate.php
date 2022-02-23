@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Casts\StorageFilePath;
-use App\Events\CandidateStatusUpdated;
 use App\Http\Traits\ApiPagination;
 use App\Http\Traits\Relations\{BelongsToManyStatuses,
     BelongsToPosition,
@@ -12,7 +10,6 @@ use App\Http\Traits\Relations\{BelongsToManyStatuses,
     BelongsToManySkills
 };
 use Illuminate\Database\Eloquent\{Factories\HasFactory, Model, SoftDeletes};
-use Illuminate\Support\Facades\Cache;
 
 class Candidate extends Model
 {

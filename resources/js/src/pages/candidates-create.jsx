@@ -8,7 +8,6 @@ import {
     Typography,
     Grid,
     Divider,
-    Slider,
     Button,
     IconButton,
     FormHelperText,
@@ -18,7 +17,7 @@ import MultipleSelectChip from "../components/form/MultipleSelectChip";
 import Select from "../components/form/Select";
 import { useCollection } from "../context/CollectionContext";
 import { storeCandidate } from "../api/candidates";
-import { Response } from "../utils/HttpCodes";
+import Response from "../utils/HttpCodes";
 import { useNavigate } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -73,7 +72,7 @@ const CandidatesCreate = () => {
     });
 
     return (
-        <Container style={{ marginTop: "5rem" }}>
+        <Container style={{ marginTop: "2rem" }}>
             <IconButton aria-label="back" onClick={() => navigate("/")}>
                 <ArrowBackIcon />
             </IconButton>
@@ -233,20 +232,6 @@ const CandidatesCreate = () => {
                             />
                         </Grid>
                         <Grid item xs={6}>
-                            {/* <Typography gutterBottom>
-                                Years of experience
-                            </Typography>
-                            <Slider
-                                id="years_of_experience"
-                                name="years_of_experience"
-                                label="Years of experience"
-                                defaultValue={
-                                    formik.values.years_of_experience || 0
-                                }
-                                aria-label="years_of_experience"
-                                valueLabelDisplay="auto"
-                                color="secondary"
-                            /> */}
                             <TextField
                                 fullWidth
                                 type="number"

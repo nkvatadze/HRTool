@@ -13,12 +13,15 @@ import {
     TableHead,
     TableRow,
 } from "@mui/material";
-import { fetchCandidates } from "../api/candidates";
+import { fetchCandidates, destroyCandidate } from "../api/candidates";
 import { useCollection } from "../context/CollectionContext";
 import { Link, useNavigate } from "react-router-dom";
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 import DownloadingIcon from "@mui/icons-material/Downloading";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import Response from "../utils/HttpCodes";
 
 const Candidates = () => {
     const navigate = useNavigate();
@@ -38,8 +41,21 @@ const Candidates = () => {
         }
     }, [skip, isLoading]);
 
+    const handleRemove = async (candidateId) => {
+        console.log("as");
+        try {
+            const res = await destroyCandidate(candidateId);
+            console.log(res);
+            if (res.status === Response.no_content) {
+                setCandidates(candidates.filter((c) => c.id !== candidateId));
+            }
+        } catch (e) {
+            console.dir(e);
+        }
+    };
+
     return (
-        <Container>
+        <Container maxWidth="xl">
             <Stack
                 direction="column"
                 justifyContent="center"
@@ -55,16 +71,18 @@ const Candidates = () => {
                 </Button>
 
                 <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 1000 }}>
+                    <Table sx={{ minWidth: 650 }}>
                         <TableHead>
                             <TableRow>
-                                <TableCell>Candidate</TableCell>
+                                <TableCell size="small">Candidate</TableCell>
                                 <TableCell>Contact</TableCell>
                                 <TableCell>Skills</TableCell>
                                 <TableCell>Sallary Range</TableCell>
                                 <TableCell>CV</TableCell>
                                 <TableCell>Linked In</TableCell>
                                 <TableCell>Status</TableCell>
+                                <TableCell>Actions</TableCell>
+                                <TableCell></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -122,8 +140,7 @@ const Candidates = () => {
                                             <IconButton
                                                 color="info"
                                                 size="large"
-                                                component={Link}
-                                                to={`/candidates/${candidate.id}/cv`}
+                                                href={`/api/candidates/${candidate.id}/cv`}
                                                 target="_blank"
                                                 download
                                             >
@@ -159,6 +176,33 @@ const Candidates = () => {
                                                 ).name
                                             }
                                         />
+                                    </TableCell>
+                                    <TableCell>
+                                        <IconButton
+                                            color="info"
+                                            onClick={() =>
+                                                navigate(
+                                                    `candidates/${candidate.id}/edit`,
+                                                    {
+                                                        state: {
+                                                            candidate,
+                                                        },
+                                                    }
+                                                )
+                                            }
+                                        >
+                                            <EditIcon />
+                                        </IconButton>
+                                    </TableCell>
+                                    <TableCell>
+                                        <IconButton
+                                            color="error"
+                                            onClick={() =>
+                                                handleRemove(candidate.id)
+                                            }
+                                        >
+                                            <DeleteIcon />
+                                        </IconButton>
                                     </TableCell>
                                 </TableRow>
                             ))}

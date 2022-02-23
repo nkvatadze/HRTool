@@ -22,8 +22,9 @@ Route::prefix('candidates')
     ->name('candidates.')
     ->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/{candidate}/cv', 'downloadCV')->name('download.cv');
         Route::post('/', 'store')->name('store');
+        Route::get('/{candidate}', 'show')->name('show');
+        Route::get('/{candidate}/cv', 'downloadCV')->name('download.cv');
         Route::patch('{candidate}', 'update')->name('update');
         Route::delete('{candidate}', 'destroy')->name('destroy');
     });

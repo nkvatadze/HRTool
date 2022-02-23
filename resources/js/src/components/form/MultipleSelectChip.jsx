@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 
 export default function MultipleSelectChip({
+    disabled,
     value,
     label,
     name,
@@ -20,7 +21,7 @@ export default function MultipleSelectChip({
     helperText,
 }) {
     return (
-        <FormControl sx={{ m: 1 }} fullWidth>
+        <FormControl sx={{ m: 1 }} fullWidth disabled={disabled || false}>
             <InputLabel id={name}>{label}</InputLabel>
             <Select
                 labelId={name}

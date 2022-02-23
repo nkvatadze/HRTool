@@ -28,6 +28,13 @@ class CandidateController extends Controller
         return CandidateResource::collection($candidates);
     }
 
+    public function show(Candidate $candidate): JsonResource
+    {
+        return new CandidateResource(
+            $candidate->load('phones', 'skills')
+        );
+    }
+
     public function store(StoreRequest $request): JsonResponse
     {
         $validated = $request->validated();
