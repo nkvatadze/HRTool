@@ -17,7 +17,6 @@ const Select = ({
     error,
     helperText,
 }) => {
-    console.log(value);
     return (
         <FormControl required={required} sx={{ m: 1 }} fullWidth>
             <InputLabel id={name}>{label}</InputLabel>

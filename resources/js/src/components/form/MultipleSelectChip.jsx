@@ -1,12 +1,14 @@
-import * as React from "react";
-import { useTheme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import Chip from "@mui/material/Chip";
+import React from "react";
+import {
+    Box,
+    OutlinedInput,
+    InputLabel,
+    MenuItem,
+    FormControl,
+    Select,
+    Chip,
+    FormHelperText,
+} from "@mui/material";
 
 export default function MultipleSelectChip({
     value,
@@ -14,6 +16,8 @@ export default function MultipleSelectChip({
     name,
     options,
     onChange,
+    error,
+    helperText,
 }) {
     return (
         <FormControl sx={{ m: 1 }} fullWidth>
@@ -25,6 +29,7 @@ export default function MultipleSelectChip({
                 multiple
                 value={value || []}
                 onChange={onChange}
+                error={error}
                 input={<OutlinedInput id={`select-${name}`} label={label} />}
                 renderValue={(selected) => {
                     return (
@@ -38,6 +43,7 @@ export default function MultipleSelectChip({
                             {selected.map((id) => (
                                 <Chip
                                     key={id}
+                                    color="secondary"
                                     label={
                                         options.find(
                                             (option) => option.id === id
@@ -55,6 +61,7 @@ export default function MultipleSelectChip({
                     </MenuItem>
                 ))}
             </Select>
+            <FormHelperText error={Boolean(error)}>{helperText}</FormHelperText>
         </FormControl>
     );
 }

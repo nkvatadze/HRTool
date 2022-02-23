@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useFormik } from "formik";
+import React from "react";
+import { FieldArray, FormikProvider, useFormik } from "formik";
 import {
     Container,
     Paper,
@@ -8,50 +8,23 @@ import {
     Typography,
     Grid,
     Divider,
+    Slider,
     Button,
+    IconButton,
+    FormHelperText,
 } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
-import * as yup from "yup";
 import MultipleSelectChip from "../components/form/MultipleSelectChip";
 import Select from "../components/form/Select";
 import { useCollection } from "../context/CollectionContext";
-
-const validation = yup.object({
-    first_name: yup
-        .string("Enter candidate's First name")
-        .required("First name is required"),
-    last_name: yup
-        .string("Enter candidate's Last name")
-        .required("Last name is required"),
-
-    min_salary: yup
-        .number("Min salary must be a number")
-        .integer()
-        .when("max_salary", {
-            is: true,
-            then: (schema) =>
-                schema.lessThan(
-                    yup.ref("max_salary"),
-                    "Min salary must be less then max salary"
-                ),
-        })
-        .nullable(true),
-    max_salary: yup
-        .number("Min salary must be a number")
-        .integer()
-        .moreThan(
-            yup.ref("min_salary"),
-            "Max salary must be greater then min salary"
-        )
-        .nullable(true),
-    position_id: yup.number().integer().required("Position field is required"),
-    skills: yup.array(),
-    email: yup.string().email("Must be a valid e-mail"),
-    years_of_experience: yup.number().integer().nullable(true),
-    linkedin_url: yup.string("Enter candidate's LinkedIn's URL"),
-});
+import { storeCandidate } from "../api/candidates";
+import { Response } from "../utils/HttpCodes";
+import { useNavigate } from "react-router-dom";
+import DeleteIcon from "@mui/icons-material/Delete";
+import validation from "../validation/candidates/create-validation";
 
 const CandidatesCreate = () => {
+    const navigate = useNavigate();
     const { collection, isLoading } = useCollection();
     const formik = useFormik({
         initialValues: {
@@ -63,44 +36,41 @@ const CandidatesCreate = () => {
             years_of_experience: "",
             position_id: "",
             skills: [],
+            phones: [],
             linkedin_url: "",
+            cv: null,
         },
         validationSchema: validation,
-        onSubmit: (values) => {
-            Object.keys(values).forEach((key) => {
-                if (!values[key]) {
-                    delete values[key];
+        onSubmit: async (values) => {
+            //Prepare data for sending
+            const formData = new FormData();
+            for (const key in values) {
+                // If value is an array, we should append each array field individually
+                if (Array.isArray(values[key])) {
+                    if (values[key].length) {
+                        for (const value of values[key]) {
+                            formData.append(`${key}[]`, value);
+                        }
+                    }
+                } else if (values[key]) {
+                    formData.append(key, values[key]);
                 }
-            });
-            console.log(values);
+            }
+
+            try {
+                const res = await storeCandidate(formData);
+                if (res.status === Response.created) {
+                    navigate("/");
+                }
+            } catch (e) {
+                const errors = e.response.data.errors;
+                for (const key in errors) {
+                    formik.setFieldError(key, errors[key][0]);
+                }
+            }
         },
     });
-    const [formData, setFormData] = useState({});
-    const [cv, setCV] = useState();
 
-    // const handleChange = (e) => {
-    //     const { name, value } = e.target;
-    //     setFormData({
-    //         ...formData,
-    //         [name]: value,
-    //     });
-    // };
-
-    // const handleFileChange = (e) => {
-    //     setCV(e.target.files[0]);
-    // };
-    // console.log(cv);
-
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     const data = new FormData();
-    //     data.append(formData);
-    //     if (cv) {
-    //         data.append("cv", cv);
-    //     }
-
-    //     console.log(data);
-    // };
     return (
         <Container style={{ marginTop: "5rem" }}>
             <Stack
@@ -116,7 +86,10 @@ const CandidatesCreate = () => {
                     Fill necessary data to create a candidate
                 </Typography>
                 <Divider style={{ width: "100%" }} />
-                <form onSubmit={formik.handleSubmit}>
+                <form
+                    onSubmit={formik.handleSubmit}
+                    encType="multipart-form-data"
+                >
                     <Grid container spacing={4} style={{ marginTop: 2 }}>
                         <Grid item xs={6}>
                             <TextField
@@ -256,6 +229,20 @@ const CandidatesCreate = () => {
                             />
                         </Grid>
                         <Grid item xs={6}>
+                            {/* <Typography gutterBottom>
+                                Years of experience
+                            </Typography>
+                            <Slider
+                                id="years_of_experience"
+                                name="years_of_experience"
+                                label="Years of experience"
+                                defaultValue={
+                                    formik.values.years_of_experience || 0
+                                }
+                                aria-label="years_of_experience"
+                                valueLabelDisplay="auto"
+                                color="secondary"
+                            /> */}
                             <TextField
                                 fullWidth
                                 type="number"
@@ -294,18 +281,120 @@ const CandidatesCreate = () => {
                                 }
                             />
                         </Grid>
-                        {/* <Grid item xs={12}>
+                        <FormikProvider value={formik}>
+                            <FieldArray
+                                name="phones"
+                                render={(arrayHelpers) => (
+                                    <>
+                                        <Grid item xs={12}>
+                                            {formik.values.phones.map(
+                                                (phone, i) => (
+                                                    <Grid
+                                                        container
+                                                        alignItems="center"
+                                                        key={i}
+                                                        style={{
+                                                            marginTop: 10,
+                                                        }}
+                                                    >
+                                                        <Grid item xs={10}>
+                                                            <TextField
+                                                                fullWidth
+                                                                label={`Phone Number ${
+                                                                    i + 1
+                                                                }`}
+                                                                variant="standard"
+                                                                name={`phones[${i}]`}
+                                                                value={phone}
+                                                                onChange={
+                                                                    formik.handleChange
+                                                                }
+                                                                error={
+                                                                    formik
+                                                                        .errors
+                                                                        .phones &&
+                                                                    Boolean(
+                                                                        formik
+                                                                            .errors
+                                                                            .phones[
+                                                                            i
+                                                                        ]
+                                                                    )
+                                                                }
+                                                                helperText={
+                                                                    formik
+                                                                        .errors
+                                                                        .phones &&
+                                                                    formik
+                                                                        .errors
+                                                                        .phones[
+                                                                        i
+                                                                    ]
+                                                                }
+                                                            />
+                                                        </Grid>
+                                                        <Grid item xs={2}>
+                                                            <IconButton
+                                                                color="error"
+                                                                onClick={() =>
+                                                                    arrayHelpers.remove(
+                                                                        i
+                                                                    )
+                                                                }
+                                                            >
+                                                                <DeleteIcon />
+                                                            </IconButton>
+                                                        </Grid>
+                                                    </Grid>
+                                                )
+                                            )}
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <Button
+                                                variant="contained"
+                                                onClick={() =>
+                                                    arrayHelpers.push("")
+                                                }
+                                            >
+                                                Add Phone
+                                            </Button>
+                                        </Grid>
+                                    </>
+                                )}
+                            />
+                        </FormikProvider>
+                        <Grid item xs={6}>
                             <Button variant="contained" component="label">
                                 Upload CV
                                 <input
                                     type="file"
                                     id="cv"
                                     name="cv"
-                                    onChange={handleFileChange}
+                                    accept=".pdf,.doc,.docx"
+                                    onChange={(e) => {
+                                        formik.setFieldValue(
+                                            "cv",
+                                            e.target.files[0]
+                                        );
+                                    }}
                                     hidden
                                 />
                             </Button>
-                        </Grid> */}
+
+                            <Typography
+                                variant="caption"
+                                style={{ marginLeft: 10 }}
+                            >
+                                {formik.values.cv
+                                    ? formik.values.cv.name
+                                    : "No file chosen"}
+                            </Typography>
+                            {formik.errors.cv && (
+                                <FormHelperText error>
+                                    {formik.errors.cv}
+                                </FormHelperText>
+                            )}
+                        </Grid>
                         <Grid item xs={12} style={{ textAlign: "center" }}>
                             <Button
                                 color="secondary"

@@ -6,3 +6,5 @@ export const fetchCandidates = (skip = 0) =>
             skip: skip,
         },
     });
+
+export const storeCandidate = (data) => client.post("/candidates", data);
