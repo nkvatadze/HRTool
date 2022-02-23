@@ -21,6 +21,7 @@ import { storeCandidate } from "../api/candidates";
 import { Response } from "../utils/HttpCodes";
 import { useNavigate } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import validation from "../validation/candidates/create-validation";
 
 const CandidatesCreate = () => {
@@ -73,8 +74,11 @@ const CandidatesCreate = () => {
 
     return (
         <Container style={{ marginTop: "5rem" }}>
+            <IconButton aria-label="back" onClick={() => navigate("/")}>
+                <ArrowBackIcon />
+            </IconButton>
             <Stack
-                style={{ padding: 20 }}
+                style={{ padding: 20, marginTop: 20 }}
                 component={Paper}
                 elevation={3}
                 direction="column"
