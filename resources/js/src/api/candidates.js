@@ -1,9 +1,10 @@
 import client from "./axios";
 
-export const fetchCandidates = (skip = 0) =>
+export const fetchCandidates = (page, per_page) =>
     client.get("/candidates", {
         params: {
-            skip: skip,
+            page,
+            per_page,
         },
     });
 

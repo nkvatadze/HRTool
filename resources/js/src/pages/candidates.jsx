@@ -12,46 +12,58 @@ import {
     TableContainer,
     TableHead,
     TableRow,
+    TableFooter,
+    TablePagination,
 } from "@mui/material";
 import { fetchCandidates, destroyCandidate } from "../api/candidates";
 import { useCollection } from "../context/CollectionContext";
-import { Link, useNavigate } from "react-router-dom";
-import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
+import { useNavigate } from "react-router-dom";
 import DownloadingIcon from "@mui/icons-material/Downloading";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Response from "../utils/HttpCodes";
+import { getStatusColor } from "../utils/candidates";
 
 const Candidates = () => {
     const navigate = useNavigate();
     const [candidates, setCandidates] = useState([]);
-    const [skip, setSkip] = useState(0);
+    const [total, setTotal] = useState(0);
+    const [page, setPage] = useState(0);
+    const [perPage, setPerPage] = useState(5);
     const { collection, isLoading } = useCollection();
 
     useEffect(() => {
         const getCandidates = async () => {
             try {
-                const res = await fetchCandidates(skip);
-                setCandidates(res.data);
+                const res = await fetchCandidates(page, perPage);
+                setCandidates(res.data.candidates);
+                setTotal(res.data.total);
             } catch (e) {}
         };
         if (!isLoading) {
             getCandidates();
         }
-    }, [skip, isLoading]);
+    }, [page, perPage, isLoading]);
 
     const handleRemove = async (candidateId) => {
-        console.log("as");
         try {
             const res = await destroyCandidate(candidateId);
-            console.log(res);
             if (res.status === Response.no_content) {
                 setCandidates(candidates.filter((c) => c.id !== candidateId));
             }
         } catch (e) {
             console.dir(e);
         }
+    };
+
+    const handlePageChange = (e, newPage) => {
+        setPage(newPage);
+    };
+
+    const handlePerPageChange = (event) => {
+        setPerPage(parseInt(event.target.value, 10));
+        setPage(0);
     };
 
     return (
@@ -160,14 +172,11 @@ const Candidates = () => {
                                     </TableCell>
                                     <TableCell>
                                         <Chip
-                                            color="primary"
-                                            icon={<CompareArrowsIcon />}
+                                            color={getStatusColor(
+                                                collection.statuses,
+                                                candidate.status_id
+                                            )}
                                             clickable
-                                            onClick={() =>
-                                                navigate(
-                                                    `candidate/${candidate.id}/show`
-                                                )
-                                            }
                                             label={
                                                 collection.statuses.find(
                                                     (status) =>
@@ -207,6 +216,19 @@ const Candidates = () => {
                                 </TableRow>
                             ))}
                         </TableBody>
+                        <TableFooter>
+                            <TableRow>
+                                <TablePagination
+                                    rowsPerPageOptions={[5, 10, 25]}
+                                    colSpan={8}
+                                    count={total}
+                                    rowsPerPage={perPage}
+                                    page={page}
+                                    onPageChange={handlePageChange}
+                                    onRowsPerPageChange={handlePerPageChange}
+                                />
+                            </TableRow>
+                        </TableFooter>
                     </Table>
                 </TableContainer>
             </Stack>

@@ -18,16 +18,22 @@ class CandidateController extends Controller
 {
     use FileUpload;
 
-    public function index(IndexRequest $request): JsonResource
+    public function index(IndexRequest $request): JsonResponse
     {
         $validated = $request->validated();
 
-        $candidates = Candidate::with('phones', 'skills')
-            ->latest('id')
-            ->apiPagination($validated['skip'])
+        $candidatesQuery = Candidate::with('phones', 'skills')
+            ->latest('id');
+
+        $total = $candidatesQuery->count();
+
+        $candidates = $candidatesQuery->forPage($validated['page'], $validated['per_page'])
             ->get();
 
-        return CandidateResource::collection($candidates);
+        return response()->success([
+            'candidates' => CandidateResource::collection($candidates),
+            'total' => $total
+        ]);
     }
 
     public function show(Candidate $candidate): JsonResource
