@@ -23,6 +23,7 @@ class CandidateController extends Controller
         $validated = $request->validated();
 
         $candidatesQuery = Candidate::with('phones', 'skills')
+            ->search($validated['search'] ?? null)
             ->latest('id');
 
         $total = $candidatesQuery->count();
@@ -51,9 +52,8 @@ class CandidateController extends Controller
 
         $candidate = Candidate::create($validated);
 
-        $candidate->addSkills($validated['skills'] ?? []);
-
-        $candidate->addPhones($validated['phones'] ?? []);
+        $candidate->addSkills($validated['skills'] ?? [])
+            ->addPhones($validated['phones'] ?? []);
 
         return response()->success(code: Response::HTTP_CREATED);
     }

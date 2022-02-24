@@ -12,11 +12,13 @@ trait HasManyPhones
         return $this->morphMany(Phone::class, 'phoneable');
     }
 
-    public function addPhones(array $phones): void
+    public function addPhones(array $phones): self
     {
         $this->phones()->createMany(
             array_map(fn($number) => ['number' => $number], $phones)
         );
+
+        return $this;
     }
 
     public function getPhoneNumbersAttribute(): array

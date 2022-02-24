@@ -1,10 +1,11 @@
 import client from "./axios";
 
-export const fetchCandidates = (page, per_page) =>
+export const fetchCandidates = (page, per_page, search) =>
     client.get("/candidates", {
         params: {
             page,
             per_page,
+            search,
         },
     });
 

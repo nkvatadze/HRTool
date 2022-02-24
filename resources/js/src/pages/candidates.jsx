@@ -3,6 +3,7 @@ import {
     Button,
     Chip,
     Container,
+    Grid,
     Stack,
     Paper,
     IconButton,
@@ -14,6 +15,7 @@ import {
     TableRow,
     TableFooter,
     TablePagination,
+    TextField,
 } from "@mui/material";
 import { fetchCandidates, destroyCandidate } from "../api/candidates";
 import { useCollection } from "../context/CollectionContext";
@@ -24,10 +26,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Response from "../utils/HttpCodes";
 import { getStatusColor } from "../utils/candidates";
-
+import ClearIcon from "@mui/icons-material/Clear";
+import SearchIcon from "@mui/icons-material/Search";
+import Select from "../components/form/Select";
 const Candidates = () => {
     const navigate = useNavigate();
     const [candidates, setCandidates] = useState([]);
+    const [search, setSearch] = useState("");
     const [total, setTotal] = useState(0);
     const [page, setPage] = useState(0);
     const [perPage, setPerPage] = useState(5);
@@ -36,21 +41,37 @@ const Candidates = () => {
     useEffect(() => {
         const getCandidates = async () => {
             try {
-                const res = await fetchCandidates(page, perPage);
+                const res = await fetchCandidates(page, perPage, search);
                 setCandidates(res.data.candidates);
                 setTotal(res.data.total);
             } catch (e) {}
         };
+        let timer;
         if (!isLoading) {
-            getCandidates();
+            if (search) {
+                setPage(0);
+                timer = setTimeout(() => {
+                    getCandidates();
+                }, 1000);
+            } else {
+                getCandidates();
+            }
         }
-    }, [page, perPage, isLoading]);
+
+        return () => clearTimeout(timer);
+    }, [page, perPage, search, isLoading]);
 
     const handleRemove = async (candidateId) => {
         try {
             const res = await destroyCandidate(candidateId);
             if (res.status === Response.no_content) {
-                setCandidates(candidates.filter((c) => c.id !== candidateId));
+                const newCandidates = candidates.filter(
+                    (c) => c.id !== candidateId
+                );
+                setCandidates(newCandidates);
+                if (newCandidates.length === 0) {
+                    setPage();
+                }
             }
         } catch (e) {
             console.dir(e);
@@ -61,9 +82,13 @@ const Candidates = () => {
         setPage(newPage);
     };
 
-    const handlePerPageChange = (event) => {
-        setPerPage(parseInt(event.target.value, 10));
+    const handlePerPageChange = (e) => {
+        setPerPage(parseInt(e.target.value, 10));
         setPage(0);
+    };
+
+    const handleSearchChange = (value = "") => {
+        setSearch(value);
     };
 
     return (
@@ -73,15 +98,49 @@ const Candidates = () => {
                 justifyContent="center"
                 alignItems="center"
             >
-                <Button
-                    style={{ alignSelf: "flex-end", margin: "1rem" }}
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => navigate("candidates/create")}
+                <Grid
+                    container
+                    justifyContent="space-between"
+                    alignItems="center"
                 >
-                    Add new Candidate
-                </Button>
-
+                    <Grid item xs={4}>
+                        <TextField
+                            fullWidth
+                            variant="standard"
+                            value={search}
+                            onChange={(e) => handleSearchChange(e.target.value)}
+                            placeholder="Search"
+                            InputProps={{
+                                startAdornment: <SearchIcon fontSize="small" />,
+                                endAdornment: (
+                                    <IconButton
+                                        title="Clear"
+                                        aria-label="Clear"
+                                        size="small"
+                                        style={{
+                                            visibility: search
+                                                ? "visible"
+                                                : "hidden",
+                                        }}
+                                        onClick={() => handleSearchChange()}
+                                    >
+                                        <ClearIcon fontSize="small" />
+                                    </IconButton>
+                                ),
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={8} style={{ textAlign: "end" }}>
+                        <Button
+                            style={{ alignSelf: "flex-end", margin: "1rem" }}
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => navigate("candidates/create")}
+                        >
+                            Add new Candidate
+                        </Button>
+                    </Grid>
+                </Grid>
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }}>
                         <TableHead>

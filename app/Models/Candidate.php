@@ -9,7 +9,7 @@ use App\Http\Traits\Relations\{BelongsToManyStatuses,
     HasManyPhones,
     BelongsToManySkills
 };
-use Illuminate\Database\Eloquent\{Factories\HasFactory, Model, SoftDeletes};
+use Illuminate\Database\Eloquent\{Builder, Factories\HasFactory, Model, SoftDeletes};
 
 class Candidate extends Model
 {
@@ -34,4 +34,17 @@ class Candidate extends Model
         'linkedin_url',
         'cv_path',
     ];
+
+    public array $searchableFields = [
+        'first_name',
+        'last_name',
+        'email',
+    ];
+
+    public function scopeSearch(Builder $query, ?string $search)
+    {
+        if (!$search) return $query;
+
+        $query->where('candidates.search_values', 'like', "%$search%");
+    }
 }

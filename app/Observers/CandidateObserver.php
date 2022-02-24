@@ -25,6 +25,21 @@ class CandidateObserver
     }
 
     /**
+     * Handle the User "saving" event.
+     *
+     * @param Candidate $candidate
+     *
+     * @return void
+     */
+    public function saving(Candidate $candidate)
+    {
+        $candidate->search_values = implode(
+            ' ',
+            array_map(fn($field) => $candidate->{$field}, $candidate->searchableFields)
+        );
+    }
+
+    /**
      * Handle the User "updated" event.
      *
      * @param Candidate $candidate

@@ -13,14 +13,18 @@ trait BelongsToManySkills
         return $this->belongsToMany(Skill::class, relation: CandidateSkill::class);
     }
 
-    public function addSkills(array $skills): void
+    public function addSkills(array $skills): self
     {
         $this->skills()->attach($skills);
+
+        return $this;
     }
 
-    public function syncSkills(array $skills): void
+    public function syncSkills(array $skills): self
     {
         $this->skills()->sync($skills);
+
+        return $this;
     }
 
     public function getSkillIdsAttribute(): array

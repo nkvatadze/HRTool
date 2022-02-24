@@ -26,7 +26,7 @@ class IndexRequest extends FormRequest
         return [
             'page' => 'required|integer',
             'per_page' => 'required|integer',
-            'search' => 'string'
+            'search' => 'string|nullable'
         ];
     }
 }
