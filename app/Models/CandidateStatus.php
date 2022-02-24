@@ -15,4 +15,8 @@ class CandidateStatus extends Pivot
         'status_id',
         'comment'
     ];
+
+    protected $casts = [
+        'created_at' => 'timestamp'
+    ];
 }

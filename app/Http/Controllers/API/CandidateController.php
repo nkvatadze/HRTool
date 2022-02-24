@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CandidateShowResource;
+use App\Http\Resources\CandidateStatusResource;
 use App\Http\Requests\{Candidate\IndexRequest, Candidate\StoreRequest, Candidate\UpdateRequest};
 use App\Http\Resources\CandidateResource;
 use App\Http\Traits\FileUpload;
@@ -30,8 +32,8 @@ class CandidateController extends Controller
 
     public function show(Candidate $candidate): JsonResource
     {
-        return new CandidateResource(
-            $candidate->load('phones', 'skills')
+        return new CandidateShowResource(
+            $candidate->load(['phones', 'skills', 'statuses' => fn($query) => $query->latest('pivot_id')])
         );
     }
 
@@ -53,7 +55,7 @@ class CandidateController extends Controller
     public function update(Candidate $candidate, UpdateRequest $request)
     {
         $validated = $request->validated();
-
+//dd($validated);
         DB::beginTransaction();
         try {
             $candidate->update($validated);
@@ -66,7 +68,9 @@ class CandidateController extends Controller
             ]);
         }
 
-        return \response()->success(code: Response::HTTP_NO_CONTENT);
+        return (new CandidateStatusResource(
+            $candidate->statuses()->latest()->first()
+        ))->response()->setStatusCode(Response::HTTP_CREATED);
     }
 
     public function downloadCV(Candidate $candidate): StreamedResponse

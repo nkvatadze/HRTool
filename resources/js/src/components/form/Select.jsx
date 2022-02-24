@@ -18,7 +18,12 @@ const Select = ({
     helperText,
 }) => {
     return (
-        <FormControl disabled={disabled || false} sx={{ m: 1 }} fullWidth>
+        <FormControl
+            disabled={disabled || false}
+            sx={{ m: 1 }}
+            style={{ margin: 0 }}
+            fullWidth
+        >
             <InputLabel id={name}>{label}</InputLabel>
             <MuiSelect
                 labelId={name}

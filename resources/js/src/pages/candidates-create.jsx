@@ -397,18 +397,6 @@ const CandidatesCreate = () => {
                     </Grid>
                 </form>
             </Stack>
-            {/* <Grid item xs={4}>
-                    <Stack
-                        style={{ padding: 20 }}
-                        component={Paper}
-                        elevation={3}
-                        direction="column"
-                        justifyContent="center"
-                        alignItems="flex-start"
-                    >
-                        <Typography variant="h6">Status Timeline</Typography>
-                    </Stack>
-                </Grid> */}
         </Container>
     );
 };

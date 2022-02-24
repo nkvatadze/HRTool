@@ -21,7 +21,12 @@ export default function MultipleSelectChip({
     helperText,
 }) {
     return (
-        <FormControl sx={{ m: 1 }} fullWidth disabled={disabled || false}>
+        <FormControl
+            sx={{ m: 1 }}
+            fullWidth
+            disabled={disabled || false}
+            style={{ margin: 0 }}
+        >
             <InputLabel id={name}>{label}</InputLabel>
             <Select
                 labelId={name}

@@ -11,6 +11,6 @@ trait BelongsToManyStatuses
     public function statuses(): BelongsToMany
     {
         return $this->belongsToMany(Status::class, relation: CandidateStatus::class)
-            ->withPivot(['comment', 'created_at']);
+            ->withPivot(['id', 'comment', 'created_at']);
     }
 }
