@@ -34,9 +34,12 @@ const Select = ({
                 label={name}
                 error={error}
             >
-                <MenuItem value="">
-                    <em>Select {label}</em>
-                </MenuItem>
+                {!value && (
+                    <MenuItem value="">
+                        <em>Select {label}</em>
+                    </MenuItem>
+                )}
+
                 {options.map((option) => (
                     <MenuItem key={option.id} value={option.id}>
                         {option.name}

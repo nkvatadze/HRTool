@@ -28,8 +28,15 @@ class UpdateRequest extends FormRequest
         $statuses = Cache::rememberForever('statuses', fn() => Status::all())->pluck('id')->all();
 
         return [
-            'status_id' => 'integer|in:' . implode(',', $statuses),
-            'status_comment' => 'required_with:status_id'
+            'status_id' => 'required|integer|in:' . implode(',', $statuses),
+            'status_comment' => 'required_with:status_id|max:500'
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'status_comment.required_with' => "The status comment field is required"
         ];
     }
 }

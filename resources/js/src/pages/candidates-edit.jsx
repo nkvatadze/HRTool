@@ -27,13 +27,15 @@ import { useEffect, useState } from "react";
 import DownloadingIcon from "@mui/icons-material/Downloading";
 import { updateCandidate } from "../api/candidates";
 import { useFormik } from "formik";
-import Timeline from "@mui/lab/Timeline";
-import TimelineItem from "@mui/lab/TimelineItem";
-import TimelineSeparator from "@mui/lab/TimelineSeparator";
-import TimelineConnector from "@mui/lab/TimelineConnector";
-import TimelineContent from "@mui/lab/TimelineContent";
-import TimelineDot from "@mui/lab/TimelineDot";
-import TimelineOppositeContent from "@mui/lab/TimelineOppositeContent";
+import {
+    Timeline,
+    TimelineItem,
+    TimelineSeparator,
+    TimelineConnector,
+    TimelineContent,
+    TimelineDot,
+    TimelineOppositeContent,
+} from "@mui/lab";
 
 const CandidatesEdit = () => {
     const [candidate, setCandidate] = useState();
@@ -48,6 +50,9 @@ const CandidatesEdit = () => {
             status_comment: "",
         },
         onSubmit: async (values) => {
+            if (values.status_id === candidate.status_id) {
+                return;
+            }
             try {
                 const res = await updateCandidate(candidate.id, values);
                 if (res.status === Response.created) {
@@ -55,7 +60,12 @@ const CandidatesEdit = () => {
                     setStatuses([res.data, ...statuses]);
                     formik.setFieldValue("status_comment", "");
                 }
-            } catch (e) {}
+            } catch (e) {
+                const errors = e.response.data.errors;
+                for (const key in errors) {
+                    formik.setFieldError(key, errors[key][0]);
+                }
+            }
         },
     });
 
@@ -268,6 +278,20 @@ const CandidatesEdit = () => {
                                                             formik.values
                                                                 .status_id
                                                         }
+                                                        error={
+                                                            formik.touched
+                                                                .status_id &&
+                                                            Boolean(
+                                                                formik.errors
+                                                                    .status_id
+                                                            )
+                                                        }
+                                                        helperText={
+                                                            formik.touched
+                                                                .status_id &&
+                                                            formik.errors
+                                                                .status_id
+                                                        }
                                                     />
                                                 )}
                                             </Grid>
@@ -289,6 +313,20 @@ const CandidatesEdit = () => {
                                                     }
                                                     label="Status Comment"
                                                     name="status_comment"
+                                                    error={
+                                                        formik.touched
+                                                            .status_comment &&
+                                                        Boolean(
+                                                            formik.errors
+                                                                .status_comment
+                                                        )
+                                                    }
+                                                    helperText={
+                                                        formik.touched
+                                                            .status_comment &&
+                                                        formik.errors
+                                                            .status_comment
+                                                    }
                                                 />
                                             </Grid>
                                             <Grid

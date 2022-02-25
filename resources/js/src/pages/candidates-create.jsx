@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FieldArray, FormikProvider, useFormik } from "formik";
 import {
     Container,
@@ -26,6 +26,8 @@ import validation from "../validation/candidates/create-validation";
 const CandidatesCreate = () => {
     const navigate = useNavigate();
     const { collection, isLoading } = useCollection();
+    const [submitting, setSubmitting] = useState();
+
     const formik = useFormik({
         initialValues: {
             first_name: "",
@@ -42,6 +44,7 @@ const CandidatesCreate = () => {
         },
         validationSchema: validation,
         onSubmit: async (values) => {
+            setSubmitting(true);
             //Prepare data for sending
             const formData = new FormData();
             for (const key in values) {
@@ -63,6 +66,7 @@ const CandidatesCreate = () => {
                     navigate("/");
                 }
             } catch (e) {
+                setSubmitting(false);
                 const errors = e.response.data.errors;
                 for (const key in errors) {
                     formik.setFieldError(key, errors[key][0]);
@@ -388,6 +392,7 @@ const CandidatesCreate = () => {
                             <Button
                                 color="secondary"
                                 type="submit"
+                                disabled={submitting}
                                 startIcon={<SaveIcon />}
                                 variant="contained"
                             >

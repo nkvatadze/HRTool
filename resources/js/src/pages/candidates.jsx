@@ -22,13 +22,13 @@ import { useCollection } from "../context/CollectionContext";
 import { useNavigate } from "react-router-dom";
 import DownloadingIcon from "@mui/icons-material/Downloading";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Response from "../utils/HttpCodes";
 import { getStatusColor } from "../utils/candidates";
 import ClearIcon from "@mui/icons-material/Clear";
 import SearchIcon from "@mui/icons-material/Search";
-import Select from "../components/form/Select";
+import DeleteIconButton from "../components/form/DeleteIconButton";
+
 const Candidates = () => {
     const navigate = useNavigate();
     const [candidates, setCandidates] = useState([]);
@@ -38,14 +38,15 @@ const Candidates = () => {
     const [perPage, setPerPage] = useState(5);
     const { collection, isLoading } = useCollection();
 
+    const getCandidates = async () => {
+        try {
+            const res = await fetchCandidates(page, perPage, search);
+            setCandidates(res.data.candidates);
+            setTotal(res.data.total);
+        } catch (e) {}
+    };
+
     useEffect(() => {
-        const getCandidates = async () => {
-            try {
-                const res = await fetchCandidates(page, perPage, search);
-                setCandidates(res.data.candidates);
-                setTotal(res.data.total);
-            } catch (e) {}
-        };
         let timer;
         if (!isLoading) {
             if (search) {
@@ -65,13 +66,10 @@ const Candidates = () => {
         try {
             const res = await destroyCandidate(candidateId);
             if (res.status === Response.no_content) {
-                const newCandidates = candidates.filter(
-                    (c) => c.id !== candidateId
-                );
-                setCandidates(newCandidates);
-                if (newCandidates.length === 0) {
-                    setPage();
-                }
+                // const newCandidates = candidates.filter(
+                //     (c) => c.id !== candidateId
+                // );
+                getCandidates();
             }
         } catch (e) {
             console.dir(e);
@@ -263,14 +261,13 @@ const Candidates = () => {
                                         </IconButton>
                                     </TableCell>
                                     <TableCell>
-                                        <IconButton
-                                            color="error"
-                                            onClick={() =>
+                                        <DeleteIconButton
+                                            title="Are you sure you want to delete candidate?"
+                                            description="Candidate will be removed, but you will be able to revert it from the trash bin"
+                                            confirmHandler={() =>
                                                 handleRemove(candidate.id)
                                             }
-                                        >
-                                            <DeleteIcon />
-                                        </IconButton>
+                                        />
                                     </TableCell>
                                 </TableRow>
                             ))}

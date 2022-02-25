@@ -61,7 +61,7 @@ class CandidateController extends Controller
     public function update(Candidate $candidate, UpdateRequest $request)
     {
         $validated = $request->validated();
-//dd($validated);
+
         DB::beginTransaction();
         try {
             $candidate->update($validated);
