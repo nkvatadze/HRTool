@@ -45,7 +45,7 @@ user@pc:~$ cd hr-tool
 - Install dependencies
 
 ```console
-user@pc:~/hr-tool$ composer install --no-dev
+user@pc:~/hr-tool$ composer install
 ```
 
 - Copy .env.example file into .env
