@@ -54,6 +54,12 @@ user@pc:~/hr-tool$ composer install
 user@pc:~/hr-tool$ cp .env.example .env
 ```
 
+- Change APP_URL in .env file, for `php artisan serve` command, by default it should be http://127.0.0.1:8000
+
+```console
+APP_URL={Your app's url}
+```
+
 - Generate the application key
 
 ```console
