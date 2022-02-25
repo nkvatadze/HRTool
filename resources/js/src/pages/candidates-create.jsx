@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FieldArray, FormikProvider, useFormik } from "formik";
+import { useCollection } from "../context/CollectionContext";
 import {
     Container,
     Paper,
@@ -13,18 +14,15 @@ import {
     FormHelperText,
 } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
+import DeleteIcon from "@mui/icons-material/Delete";
 import MultipleSelectChip from "../components/form/MultipleSelectChip";
 import Select from "../components/form/Select";
-import { useCollection } from "../context/CollectionContext";
+import NavigateBackButton from "../components/NavigateBackButton";
 import { storeCandidate } from "../api/candidates";
 import Response from "../utils/HttpCodes";
-import { useNavigate } from "react-router-dom";
-import DeleteIcon from "@mui/icons-material/Delete";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import validation from "../validation/candidates/create-validation";
 
 const CandidatesCreate = () => {
-    const navigate = useNavigate();
     const { collection, isLoading } = useCollection();
     const [submitting, setSubmitting] = useState();
 
@@ -77,9 +75,7 @@ const CandidatesCreate = () => {
 
     return (
         <Container style={{ marginTop: "2rem" }}>
-            <IconButton aria-label="back" onClick={() => navigate("/")}>
-                <ArrowBackIcon />
-            </IconButton>
+            <NavigateBackButton to="/" />
             <Stack
                 style={{ padding: 20, marginTop: 20 }}
                 component={Paper}

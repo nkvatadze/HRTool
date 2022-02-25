@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CandidateShowResource;
-use App\Http\Resources\CandidateStatusResource;
+use App\Http\Resources\{CandidateShowResource, CandidateStatusResource, CandidateResource};
 use App\Http\Requests\{Candidate\IndexRequest, Candidate\StoreRequest, Candidate\UpdateRequest};
-use App\Http\Resources\CandidateResource;
 use App\Http\Traits\FileUpload;
 use App\Models\Candidate;
 use Exception;
@@ -48,12 +46,12 @@ class CandidateController extends Controller
     {
         $validated = $request->validated();
 
+        // Upload CV
         $validated['cv_path'] = $this->uploadFile($validated['cv'] ?? null, config('filesystems.cv_path'), 'local');
 
-        $candidate = Candidate::create($validated);
-
-        $candidate->addSkills($validated['skills'] ?? [])
-            ->addPhones($validated['phones'] ?? []);
+        Candidate::create($validated)
+            ->addSkills($validated['skills'] ?? []) // Add candidate's skills
+            ->addPhones($validated['phones'] ?? []); // Add candidate's phone numbers
 
         return response()->success(code: Response::HTTP_CREATED);
     }
@@ -83,7 +81,6 @@ class CandidateController extends Controller
     {
         return Storage::download($candidate->cv_path);
     }
-
 
     public function destroy(Candidate $candidate): JsonResponse
     {

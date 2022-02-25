@@ -1,4 +1,6 @@
 import React from "react";
+import { useCollection } from "../context/CollectionContext";
+import { useFormik } from "formik";
 import {
     Container,
     Paper,
@@ -8,25 +10,10 @@ import {
     Grid,
     Divider,
     Button,
-    IconButton,
     InputLabel,
     Input,
-    createTheme,
     FormControl,
-    Tooltip,
 } from "@mui/material";
-import SaveIcon from "@mui/icons-material/Save";
-import MultipleSelectChip from "../components/form/MultipleSelectChip";
-import Select from "../components/form/Select";
-import { useCollection } from "../context/CollectionContext";
-import { showCandidate } from "../api/candidates";
-import Response from "../utils/HttpCodes";
-import { useNavigate, useParams } from "react-router-dom";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useEffect, useState } from "react";
-import DownloadingIcon from "@mui/icons-material/Downloading";
-import { updateCandidate } from "../api/candidates";
-import { useFormik } from "formik";
 import {
     Timeline,
     TimelineItem,
@@ -36,12 +23,21 @@ import {
     TimelineDot,
     TimelineOppositeContent,
 } from "@mui/lab";
+import SaveIcon from "@mui/icons-material/Save";
+import DownloadingIcon from "@mui/icons-material/Downloading";
+import MultipleSelectChip from "../components/form/MultipleSelectChip";
+import Select from "../components/form/Select";
+import NavigateBackButton from "../components/NavigateBackButton";
+import { showCandidate } from "../api/candidates";
+import Response from "../utils/HttpCodes";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { updateCandidate } from "../api/candidates";
 
 const CandidatesEdit = () => {
     const [candidate, setCandidate] = useState();
     const [statuses, setStatuses] = useState();
     const { candidateId } = useParams();
-    const navigate = useNavigate();
     const { collection, isLoading } = useCollection();
 
     const formik = useFormik({
@@ -85,9 +81,7 @@ const CandidatesEdit = () => {
     if (candidate) {
         return (
             <Container style={{ marginTop: "2rem" }} maxWidth="xl">
-                <IconButton aria-label="back" onClick={() => navigate("/")}>
-                    <ArrowBackIcon />
-                </IconButton>
+                <NavigateBackButton to="/" />
                 <Grid container spacing={5}>
                     <Grid item xs={7}>
                         <Stack

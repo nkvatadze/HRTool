@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Http\Traits\ApiPagination;
 use App\Http\Traits\Relations\{BelongsToManyStatuses,
     BelongsToPosition,
     BelongsToStatus,
@@ -14,7 +13,6 @@ use Illuminate\Database\Eloquent\{Builder, Factories\HasFactory, Model, SoftDele
 class Candidate extends Model
 {
     use HasFactory,
-        ApiPagination,
         BelongsToStatus,
         BelongsToPosition,
         HasManyPhones,
