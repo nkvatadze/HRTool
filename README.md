@@ -95,12 +95,12 @@ user@pc:~/hr-tool$ php artisan serve
 
 | HTTP Method | Endpoint                                            | Name                                    |
 |-------------|-----------------------------------------------------|-----------------------------------------|
+| GET         | [/api](#collection.index)                           | Get all collection data (index)         |
 | GET         | [/api/candidates](#candidate.index)                 | Get all candidates (index)              |
 | POST        | [/api/candidates](#candidate.store)                 | Create new candidate (store)            |
 | GET         | [/api/candidates/{candidateId}](#candidate.show)    | Show candidate's information (show)     |
 | PATCH       | [/api/candidates/{candidateId}](#candidate.update)  | Update candidate's information (update) |
 | Delete      | [/api/candidates/{candidateId}](#candidate.destroy) | Delete candidate (destroy)              |
-| GET         | [/api](#collection.index)                           | Get all collection data (index)         |
 
 ### Get All Candidates<a name="candidate.index" />
 
@@ -158,19 +158,19 @@ user@pc:~/hr-tool$ php artisan serve
 
 #### Body Params
 
-| Name                | Type    | Requirement | Values                                                         |
-|---------------------|---------|-------------|----------------------------------------------------------------|
-| first_name          | string  | required    | first name value                                               |
-| last_name           | string  | required    | last name value                                                |
-| position_id         | integer | required    | Possible position id from  [/api](#collection) endpoint        | 
-| min_salary          | integer | optional    | Min Salary, min=0 / max=1000000                                | 
-| max_salary          | integer | optional    | Max Salary, min=0 / max=1000000                                | 
-| email               | string  | optional    | correct email                                                  | 
-| years_of_experience | integer | optional    | Years of experience min=0 / max=100                            | 
-| skills              | array   | optional    | Possible values of skill ids from  [/api](#candiates) endpoint | 
-| phones              | array   | optional    | Array of phone number strings                                  | 
-| linkedin_url        | string  | optional    | LinkedIn's URL, in correct url format                          | 
-| cv                  | file    | optional    | CV file in pdf, doc, docx format                               | 
+| Name                | Type    | Requirement | Values                                                                |
+|---------------------|---------|-------------|-----------------------------------------------------------------------|
+| first_name          | string  | required    | first name value                                                      |
+| last_name           | string  | required    | last name value                                                       |
+| position_id         | integer | required    | Possible position id from  [/api](#collection.index) endpoint         | 
+| min_salary          | integer | optional    | Min Salary, min=0 / max=1000000                                       | 
+| max_salary          | integer | optional    | Max Salary, min=0 / max=1000000                                       | 
+| email               | string  | optional    | correct email                                                         | 
+| years_of_experience | integer | optional    | Years of experience min=0 / max=100                                   | 
+| skills              | array   | optional    | Possible values of skill ids from  [/api](#collection.index) endpoint | 
+| phones              | array   | optional    | Array of phone number strings                                         | 
+| linkedin_url        | string  | optional    | LinkedIn's URL, in correct url format                                 | 
+| cv                  | file    | optional    | CV file in pdf, doc, docx format                                      | 
 
 #### Response 201
 
@@ -234,10 +234,10 @@ user@pc:~/hr-tool$ php artisan serve
 
 #### Query Params
 
-| Name           | Type    | Requirements | Values                                           |
-|----------------|---------|--------------|--------------------------------------------------|
-| status_id      | integer | required     | Valid status id from [/api](#candiates) endpoint | 
-| status_comment | string  | required     | Status change comment                            | 
+| Name           | Type    | Requirements | Values                                                  |
+|----------------|---------|--------------|---------------------------------------------------------|
+| status_id      | integer | required     | Valid status id from [/api](#collection.index) endpoint | 
+| status_comment | string  | required     | Status change comment                                   | 
 
 #### URL Params
 
@@ -274,13 +274,11 @@ user@pc:~/hr-tool$ php artisan serve
 |-------------|---------|-------------|----------------------|
 | candidateId | integer | required    | Valid candidate's id | 
 
-
 #### Response 204
 
 ```json
 {}
 ```
-
 
 ### Get all collection data<a name="collection.index" />
 
@@ -291,7 +289,6 @@ user@pc:~/hr-tool$ php artisan serve
 | Key    | Value            |
 |--------|------------------|
 | Accept | application/json |
-
 
 #### Response 200
 
