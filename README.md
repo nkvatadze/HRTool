@@ -93,14 +93,14 @@ user@pc:~/hr-tool$ php artisan serve
 
 ## Rest API
 
-| HTTP Method | Endpoint                                  | Name                                    |
-|-------------|-------------------------------------------|-----------------------------------------|
-| GET         | [/api/candidates](#index)                 | Get all candidates (index)              |
-| POST        | [/api/candidates](#store)                 | Create new candidate (store)            |
-| GET         | [/api/candidates/{candidateId}](#show)    | Show candidate's information (show)     |
-| PATCH       | [/api/candidates/{candidateId}](#update)  | Update candidate's information (update) |
-| Delete      | [/api/candidates/{candidateId}](#destroy) | Delete candidate (destroy)              |
-| GET         | [/api](#collection)                       | Get all collection data (index)         |
+| HTTP Method | Endpoint                                            | Name                                    |
+|-------------|-----------------------------------------------------|-----------------------------------------|
+| GET         | [/api/candidates](#candidate.index)                 | Get all candidates (index)              |
+| POST        | [/api/candidates](#candidate.store)                 | Create new candidate (store)            |
+| GET         | [/api/candidates/{candidateId}](#candidate.show)    | Show candidate's information (show)     |
+| PATCH       | [/api/candidates/{candidateId}](#candidate.update)  | Update candidate's information (update) |
+| Delete      | [/api/candidates/{candidateId}](#candidate.destroy) | Delete candidate (destroy)              |
+| GET         | [/api](#collection.index)                           | Get all collection data (index)         |
 
 ### Get All Candidates<a name="candidate.index" />
 
