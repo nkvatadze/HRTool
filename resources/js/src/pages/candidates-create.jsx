@@ -21,10 +21,12 @@ import NavigateBackButton from "../components/NavigateBackButton";
 import { storeCandidate } from "../api/candidates";
 import Response from "../utils/HttpCodes";
 import validation from "../validation/candidates/create-validation";
+import { useNavigate } from "react-router-dom";
 
 const CandidatesCreate = () => {
     const { collection, isLoading } = useCollection();
     const [submitting, setSubmitting] = useState();
+    const navigate = useNavigate();
 
     const formik = useFormik({
         initialValues: {
